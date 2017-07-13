@@ -20,21 +20,32 @@ window.findNRooksSolution = function(n) {
   if (n === 1) { return [[1]]; }
   let matrix = window.findNRooksSolution(n - 1);
   matrix.forEach(array => array.push(0));
-  let nextColumn = Array(n - 1).fill(0, 0, n - 1);
-  nextColumn.push(1);
+  let nextColumn = Array(n).fill(0, 0, n - 1).fill(1, n - 1, n);
   matrix.push(nextColumn);
-  //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(matrix));
   return matrix;
 };
 
+window.generateEveryRooksSolution = function(n) {
+  if (n === 1) { return [[[1]]]; }
+  let matrices = window.generateEveryRooksSolution(n - 1);
+  matrices.forEach(matrix => matrix.forEach(array => array.push(0)));
+  let nextColumn = Array(n).fill(0, 0, n - 1).fill(1, n - 1, n);
+  matrices.push(nextColumn);
+  return matrices;
+};
+
+let permute = function(matrix) {
+  
+  return [matrix];
+};
+
 let fact = function(x) {
-  if (x === 0) {
-    return 1;
-  }
+  if (x === 0) { return 1; }
   return x * fact(x - 1);
 };
 
-// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+// return the number of nxn chessboards that exist, with n rooks placed such
+// that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   // var solutionCount = undefined; //fixme
   // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);

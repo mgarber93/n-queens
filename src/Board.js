@@ -86,7 +86,7 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      let rownumber = this.get(0).length; // fix?
+      let rownumber = this.get('n'); // fix?
       for (let i = 0; i < rownumber; i++) {
         if (this.hasRowConflictAt(i)) { return true; }
       }
@@ -101,7 +101,7 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       let pieces = 0;
-      for (let i = 0; i < this.get(0).length; i++) {
+      for (let i = 0; i < this.get('n'); i++) {
         pieces += this.get(i)[colIndex] === 0 ? 0 : 1;
       }
       return pieces > 1;
@@ -109,7 +109,7 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      let rownumber = this.get(0).length;
+      let rownumber = this.get('n');
       for (let i = 0; i < this.get(0).length; i++) {
         if (this.hasColConflictAt(i)) { return true; }
       } 
@@ -158,20 +158,30 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(diagonal) {
-      let n = this.get(0).length;
+      let n = this.get('n');
       let pieces = 0;
       if (diagonal < 0 || diagonal >= 2 * n - 1) { return false; } // off the board
       if (diagonal < n) {
         for (let i = 0; i < diagonal + 1; i++) {
           let row = this.get(i);
           let tile = row[diagonal - i];
-          if (tile !== 0) { pieces++; }
+          if (tile !== 0) { 
+            pieces++;
+            if (pieces > 1) {
+              return true;
+            }
+          }
         }
       } else {
         for (let i = 0; i < 2 * n - diagonal - 1; i++) {
           let row = this.get(diagonal - n + i + 1);
           let tile = row[n - i - 1];
-          if (tile !== 0) { pieces++; }    
+          if (tile !== 0) { 
+            pieces++;
+            if (pieces > 1) {
+              return true;
+            } 
+          }    
         }
       }
       return pieces > 1; 

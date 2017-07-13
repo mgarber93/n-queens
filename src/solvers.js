@@ -69,14 +69,15 @@ window.countNQueensSolutions = function(n) {
   //place first queen y, x
   let helperFunction = function(foundPieces) {
     if (foundPieces >= n) {
+      solutionCount++;
       return true;
     }
     for (let col = 0; col < n; col++) {
       solution.togglePiece(foundPieces, col);
       if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
         if (helperFunction(foundPieces + 1) !== false) {
-          solutionCount++;
-          return;
+          solution.togglePiece(foundPieces, col);
+          continue;
         } else {
           solution.togglePiece(foundPieces, col);     
           continue;

@@ -122,19 +122,18 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    // 2n - 1 diagnals 
-    hasMajorDiagonalConflictAt: function(d) {
+    hasMajorDiagonalConflictAt: function(diagonal) {
       let n = this.get(0).length;
       let pieces = 0;
-      if (d >= 0) {
-        for (let i = 0; d + i < n; i++) {
+      if (diagonal >= 0) {
+        for (let i = 0; diagonal + i < n; i++) {
           let row = this.get(i);
-          let tile = row[d + i];    
+          let tile = row[diagonal + i];    
           if (tile !== 0) { pieces++; }    
         }  
       } else {
-        for (let i = 0; i - d < n; i++) {
-          let row = this.get(-d + i);
+        for (let i = 0; i - diagonal < n; i++) {
+          let row = this.get(i - diagonal);
           let tile = row[i];    
           if (tile !== 0) { pieces++; }    
         } 
@@ -143,9 +142,10 @@
     },
 
     // test if any major diagonals on this board contain conflicts
+    // For a board with n by n spaces there are 2n - 1 diagnals. 
     hasAnyMajorDiagonalConflicts: function() {
       let n = this.get(0).length;
-      for (let i = -n + 1; i < 2 * n; i++) {
+      for (let i = -n + 1; i < n; i++) {
         if (this.hasMajorDiagonalConflictAt(i)) { return true; }
       }
       return false;
@@ -157,19 +157,19 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(d) {
+    hasMinorDiagonalConflictAt: function(diagonal) {
       let n = this.get(0).length;
       let pieces = 0;
-      if (d < 0 || d >= 2 * n - 1) { return false; } // off the board
-      if (d < n) {
-        for (let i = 0; i < d + 1; i++) {
+      if (diagonal < 0 || diagonal >= 2 * n - 1) { return false; } // off the board
+      if (diagonal < n) {
+        for (let i = 0; i < diagonal + 1; i++) {
           let row = this.get(i);
-          let tile = row[d - i];
+          let tile = row[diagonal - i];
           if (tile !== 0) { pieces++; }
         }
       } else {
-        for (let i = 0; i < 2 * n - d - 1; i++) {
-          let row = this.get(d - n + i + 1);
+        for (let i = 0; i < 2 * n - diagonal - 1; i++) {
+          let row = this.get(diagonal - n + i + 1);
           let tile = row[n - i - 1];
           if (tile !== 0) { pieces++; }    
         }

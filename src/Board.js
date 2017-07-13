@@ -90,7 +90,7 @@
       for (let i = 0; i < rownumber; i++) {
         if (this.hasRowConflictAt(i)) { return true; }
       }
-      return false; 
+      return false;
     },
 
 
@@ -110,10 +110,10 @@
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
       let rownumber = this.get('n');
-      for (let i = 0; i < this.get(0).length; i++) {
+      for (let i = 0; i < this.get('n'); i++) {
         if (this.hasColConflictAt(i)) { return true; }
-      } 
-      return false; 
+      }
+      return false;
     },
 
 
@@ -123,28 +123,28 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(diagonal) {
-      let n = this.get(0).length;
+      let n = this.get('n');
       let pieces = 0;
       if (diagonal >= 0) {
         for (let i = 0; diagonal + i < n; i++) {
           let row = this.get(i);
-          let tile = row[diagonal + i];    
-          if (tile !== 0) { pieces++; }    
-        }  
+          let tile = row[diagonal + i];
+          if (tile !== 0) { pieces++; }
+        }
       } else {
         for (let i = 0; i - diagonal < n; i++) {
           let row = this.get(i - diagonal);
-          let tile = row[i];    
-          if (tile !== 0) { pieces++; }    
-        } 
+          let tile = row[i];
+          if (tile !== 0) { pieces++; }
+        }
       }
       return pieces > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
-    // For a board with n by n spaces there are 2n - 1 diagnals. 
+    // For a board with n by n spaces there are 2n - 1 diagnals.
     hasAnyMajorDiagonalConflicts: function() {
-      let n = this.get(0).length;
+      let n = this.get('n');
       for (let i = -n + 1; i < n; i++) {
         if (this.hasMajorDiagonalConflictAt(i)) { return true; }
       }
@@ -165,7 +165,7 @@
         for (let i = 0; i < diagonal + 1; i++) {
           let row = this.get(i);
           let tile = row[diagonal - i];
-          if (tile !== 0) { 
+          if (tile !== 0) {
             pieces++;
             if (pieces > 1) {
               return true;
@@ -176,24 +176,24 @@
         for (let i = 0; i < 2 * n - diagonal - 1; i++) {
           let row = this.get(diagonal - n + i + 1);
           let tile = row[n - i - 1];
-          if (tile !== 0) { 
+          if (tile !== 0) {
             pieces++;
             if (pieces > 1) {
               return true;
-            } 
-          }    
+            }
+          }
         }
       }
-      return pieces > 1; 
+      return pieces > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      let n = this.get(0).length;
+      let n = this.get('n');
       for (let i = 0; i < 2 * n; i++) {
         if (this.hasMinorDiagonalConflictAt(i)) { return true; }
       }
-      return false;    
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/

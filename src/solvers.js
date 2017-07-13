@@ -11,7 +11,7 @@
 // take a look at solversSpec.js to see what the tests are expecting
 
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, 
+// return a matrix (an array of arrays) representing a single nxn chessboard,
 // with n rooks placed such that none of them can attack each other
 
 
@@ -20,22 +20,23 @@ window.findNRooksSolution = function(n) {
   if (n === 1) { return [[1]]; }
   let matrix = window.findNRooksSolution(n - 1);
   matrix.forEach(array => array.push(0));
-  let nextColumn = Array(n).fill(0, 0, n - 1).fill(1, n - 1, n);
-  matrix.push(nextColumn);
+  matrix.push(Array(n).fill(0, 0, n - 1).fill(1, n - 1, n));
   return matrix;
 };
 
 window.generateEveryRooksSolution = function(n) {
   if (n === 1) { return [[[1]]]; }
   let matrices = window.generateEveryRooksSolution(n - 1);
-  matrices.forEach(matrix => matrix.forEach(array => array.push(0)));
   let nextColumn = Array(n).fill(0, 0, n - 1).fill(1, n - 1, n);
   matrices.push(nextColumn);
   return matrices;
 };
 
-let permute = function(matrix) {
-  
+/**
+ * Return the given matrix with every permutation of the col inserted inbetween
+ * each col in that matrix.
+ */
+let permute = function(matrix, col) {
   return [matrix];
 };
 
@@ -49,6 +50,7 @@ let fact = function(x) {
 window.countNRooksSolutions = function(n) {
   // var solutionCount = undefined; //fixme
   // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+
   return fact(n);
 };
 

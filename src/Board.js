@@ -49,6 +49,19 @@
         this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
       );
     },
+    
+    getBoard: function() {
+      let cols = [];
+      let n = this.attributes.n;
+      for (let i = 0; i < n; i++) {
+        cols.push(this.attributes[i]);
+      }
+      return cols;
+    },
+    
+    isEmpty: function(rowIndex, colIndex) {
+      return this.attributes[rowIndex][colIndex] === 0;
+    },
 
     hasAnyQueensConflicts: function() {
       return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();

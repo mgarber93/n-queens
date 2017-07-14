@@ -31,40 +31,11 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   var board = new Board({'n': n});
   var solutionCount = 0;
+  // using has Any Col Conflicts is about twice as fast as any rook conflicts
   findSolution(0, n, board, 'hasAnyColConflicts', function() {
     solutionCount++;
   });
   return solutionCount;
-};
-
-// return a matrix (an array of arrays) representing a single nxn chessboard,
-// with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function(n) {
-  if (n === 0) { return {'n': 0}; }
-  if (n === 1) { return [[1]]; }
-  var solution = new Board({'n': n});
-  //place first queen y, x
-  let helperFunction = function(foundPieces) {
-    if (foundPieces >= n) {
-      return solution;
-    }
-    for (let col = 0; col < n; col++) {
-      solution.togglePiece(foundPieces, col);
-      if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
-        if (helperFunction(foundPieces + 1) === false) {
-          solution.togglePiece(foundPieces, col);
-          continue;
-        } else {
-          return solution;
-        }
-      }
-      solution.togglePiece(foundPieces, col);
-    }
-    return false;
-  };
-  helperFunction(0);
-  //console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution.getBoard();
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
@@ -105,6 +76,11 @@ window.countNQueensSolutions = function(n) {
   return solutionCount;
 };
 
+
+/**
+ * Major and minor diags are now integers for bitwise operation. Much faster!
+ *
+ */
 window.countNQueensSolutionsFaster = function(n) {
   let solutionCount = 0;
   let helperFunction = function(foundPieces = 0,

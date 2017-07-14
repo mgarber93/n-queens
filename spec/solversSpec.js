@@ -65,7 +65,7 @@ describe('solvers', function() {
     });
 
   });
-  
+
   describe('countNQueensSolutions()', function() {
 
     it('finds the number of valid solutions for n of 0-8', function() {
@@ -78,14 +78,12 @@ describe('solvers', function() {
     });
 
   });
-  
+
   describe('countNQueensSolutionsFaster()', function() {
-
-    it('finds the number of valid solutions for n of 0-8', function() {
-      _.range(0, 12).map(function(n) {
+    it('finds the number of valid solutions for n of [0-15]', function() {
+      _.range(0, 8).map(function(n) {
         var solutionCount = countNQueensSolutionsFaster(n);
-        var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680][n];
-
+        var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 2279184, 14772512][n];
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });

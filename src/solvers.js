@@ -26,18 +26,23 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such
 // that none of them can attack each other
+// var solutionCount = undefined;
+// countNRooksSolutions(n) = n!;
 window.countNRooksSolutions = function(n) {
-  // var solutionCount = undefined; //fixme
-  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return n <= 1 ? 1 : n * window.countNRooksSolutions(n - 1);
+  var board = new Board({'n': n});
+  var solutionCount = 0;
+  findSolution(0, n, board, 'hasAnyColConflicts', function() {
+    solutionCount++;
+  });
+  return solutionCount;
 };
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, 
+// return a matrix (an array of arrays) representing a single nxn chessboard,
 // with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   if (n === 0) { return {'n': 0}; }
   if (n === 1) { return [[1]]; }
-  var solution = new Board({'n': n}); 
+  var solution = new Board({'n': n});
   //place first queen y, x
   let helperFunction = function(foundPieces) {
     if (foundPieces >= n) {
@@ -47,13 +52,13 @@ window.findNQueensSolution = function(n) {
       solution.togglePiece(foundPieces, col);
       if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
         if (helperFunction(foundPieces + 1) === false) {
-          solution.togglePiece(foundPieces, col);     
+          solution.togglePiece(foundPieces, col);
           continue;
         } else {
           return solution;
         }
-      } 
-      solution.togglePiece(foundPieces, col);     
+      }
+      solution.togglePiece(foundPieces, col);
     }
     return false;
   };
@@ -65,97 +70,79 @@ window.findNQueensSolution = function(n) {
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   let solutionCount = 0;
-  var solution = new Board({'n': n}); 
-  //place first queen y, x
-  let helperFunction = function(foundPieces) {
-    if (foundPieces >= n) {
-      solutionCount++;
-      return true;
-    }
-    for (let col = 0; col < n; col++) {
-      solution.togglePiece(foundPieces, col);
-      if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
-        if (helperFunction(foundPieces + 1) !== false) {
-          solution.togglePiece(foundPieces, col);
-          continue;
-        } else {
-          solution.togglePiece(foundPieces, col);     
-          continue;
-        }
-      } 
-      solution.togglePiece(foundPieces, col);     
-    }
-    return false;
-  };
-  helperFunction(0);
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
-};
-
-window.countNQueensSolutions = function(n) {
-  let solutionCount = 0;
-  var solution = new Board({'n': n}); 
-  //place first queen y, x
-  let helperFunction = function(foundPieces) {
-    if (foundPieces >= n) {
-      solutionCount++;
-      return true;
-    }
-    for (let col = 0; col < n; col++) {
-      solution.togglePiece(foundPieces, col);
-      if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
-        if (helperFunction(foundPieces + 1) !== false) {
-          solution.togglePiece(foundPieces, col);
-        } else {
-          solution.togglePiece(foundPieces, col);     
-        }
-        continue;
-      } 
-      solution.togglePiece(foundPieces, col);     
-    }
-    return false;
-  };
-  helperFunction(0, []);
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
-};
-
-window.countNQueensSolutionsFaster = function(n) {
-  let solutionCount = 0;
   var solution = new Board({'n': n});
-  //let board = solution.getBoard(); 
-  //place first queen y, x
-  let helperFunction = function(foundPieces, occCols = [], majorDiags = [], 
+  let helperFunction = function(foundPieces, occCols = 0, majorDiags = [],
     minorDiags = []) {
     if (foundPieces >= n) {
       solutionCount++;
       return true;
     }
     for (let col = 0; col < n; col++) {
-      if(occCols.includes(col) || majorDiags.includes(col) || 
-        minorDiags.includes(col)){ 
-        continue; 
+      if (occCols & (1 << col) || majorDiags.includes(col) ||
+        minorDiags.includes(col)) {
+        continue;
       }
       solution.togglePiece(foundPieces, col);
       majorDiags.push(col);
       minorDiags.push(col);
       if (!solution.hasAnyQueenConflictsOn(foundPieces, col)) {
-        helperFunction(foundPieces + 1, occCols.concat([col]), 
-          majorDiags.reduce((acc, b) => b + 1 < n ? acc.concat([b+1]) : acc, []), 
-          minorDiags.reduce((acc, b) => b - 1 >= 0 ? acc.concat([b-1]) : acc, [])
-        ) 
-        majorDiags.pop(); 
-        minorDiags.pop(); 
+        helperFunction(foundPieces + 1, occCols | (1 << col),
+          majorDiags.reduce((acc, b) => b + 1 < n ? acc.concat([b + 1]) : acc, []),
+          minorDiags.reduce((acc, b) => b - 1 >= 0 ? acc.concat([b - 1]) : acc, [])
+        );
+        majorDiags.pop();
+        minorDiags.pop();
         solution.togglePiece(foundPieces, col);
         continue; // 100 ms difference
-      } 
-      majorDiags.pop(); 
-      minorDiags.pop(); 
-      solution.togglePiece(foundPieces, col);     
+      }
+      majorDiags.pop();
+      minorDiags.pop();
+      solution.togglePiece(foundPieces, col);
     }
     return false;
   };
-  helperFunction(0);
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  helperFunction(0, 0);
   return solutionCount;
+};
+
+window.countNQueensSolutionsFaster = function(n) {
+  let solutionCount = 0;
+  let helperFunction = function(foundPieces = 0,
+    occCols = 0,
+    majorDiags = 0,
+    minorDiags = 0) {
+    if (foundPieces >= n) {
+      solutionCount++;
+      return;
+    } else {
+      for (let col = 0; col < n; col++) {
+        if (occCols & (1 << col) || (majorDiags & (1 << col)) ||
+        (minorDiags & (1 << col))) {
+          continue;
+        }
+        helperFunction(foundPieces + 1, occCols | (1 << col),
+          (majorDiags | (1 << col)) << 1,
+          (minorDiags | (1 << col)) >> 1);
+      }
+    }
+  };
+  helperFunction();
+  return solutionCount;
+};
+
+window.findSolution = function(row, n, board, validator, callback) {
+  if (row === n) {
+    return callback();
+  }
+
+  for (var i = 0; i < n; i++) {
+    board.togglePiece(row, i);
+    if (!board[validator]()) {
+      var result = findSolution(row + 1, n, board, validator, callback);
+      if (result) {
+        return result;
+      }
+    }
+    board.togglePiece(row, i);
+  }
 };

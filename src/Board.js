@@ -49,7 +49,7 @@
         this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
       );
     },
-    
+
     getBoard: function() {
       let cols = [];
       let n = this.attributes.n;
@@ -58,7 +58,7 @@
       }
       return cols;
     },
-    
+
     isEmpty: function(rowIndex, colIndex) {
       return this.attributes[rowIndex][colIndex] === 0;
     },
@@ -75,7 +75,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -140,15 +140,11 @@
       let pieces = 0;
       if (diagonal >= 0) {
         for (let i = 0; diagonal + i < n; i++) {
-          let row = this.get(i);
-          let tile = row[diagonal + i];
-          if (tile !== 0) { pieces++; }
+          if (this.get(i)[diagonal + i] !== 0) { pieces++; }
         }
       } else {
         for (let i = 0; i - diagonal < n; i++) {
-          let row = this.get(i - diagonal);
-          let tile = row[i];
-          if (tile !== 0) { pieces++; }
+          if (this.get(i - diagonal)[i] !== 0) { pieces++; }
         }
       }
       return pieces > 1;
